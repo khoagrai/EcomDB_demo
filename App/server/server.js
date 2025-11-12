@@ -8,51 +8,39 @@ const cors = require('cors');
 const app = express();
 const port = 5000;
 
+const dbConfig = require('./dbConfig')
 
 // --- 1. Middleware ---
 app.use(cors());
 app.use(express.json());
 
-// --- 2. Database Configuration ---
-const dbConfig = {
-    server: process.env.DB_SERVER,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    options: {
-        encrypt: false,
-        trustServerCertificate: true,
-    },
-};
-
-
 
 // --- 3. Method API Routes ---
-
-app.get('/api/users', async (req, res) => {
-    try {
-        const pool = await sql.connect(dbConfig);
-        const result = await pool.request().query('SELECT * FROM [User]');
-        return res.json(result.recordsets[0]);
-    }
-    catch (error) {
-        console.log(error);
-    }
-});
+const userRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productRoutes');
+const cartRoutes = require('./routes/cartRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 
 
 
-app.get('/api/products', async (req, res) => {
-    try {
-        const pool = await sql.connect(dbConfig);
-        const result = await pool.request().query('SELECT * FROM [SanPham]');
-        return res.json(result.recordsets[0]);
-    }
-    catch (error) {
-        console.log(error);
-    }
-});
+
+app.use('/user', userRoutes);
+
+
+app.use('/product', productRoutes);
+
+
+app.use('/cart', cartRoutes);
+
+
+app.use('/order', orderRoutes);
+
+
+app.use('/payment', paymentRoutes);
+
+
 
 
 
