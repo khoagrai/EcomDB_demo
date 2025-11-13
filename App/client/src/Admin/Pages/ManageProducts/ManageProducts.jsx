@@ -18,7 +18,12 @@ function ManageProducts() {
   const fetchProducts = async (page = 1, limit = 20) => {
     try {
       const response = await getAllProducts(page, limit);
-      setProducts(response);
+      const resProducts = response.products;
+      const resPagination = response.pagination;
+
+      setProducts(resProducts);
+      setTotalProducts(resPagination.TotalCount);
+      setTotalPages(resPagination.TotalPages);
     } catch (error) {
       console.log(error);
       alert("Fetch products failed");
